@@ -15,7 +15,11 @@
         "express": "^4.16.3",
         "mongoose": "^5.0.14",
         "socket.io": "^2.1.0"
-    }, "scripts":{
-"start":"node server.js"}
-
+    },
+    "scripts": {
+        "start": "node server.js"
+    },
+    "devDependencies": {
+        "jasmine": "^3.1.0"
+    }
 }
