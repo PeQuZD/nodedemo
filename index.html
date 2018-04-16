@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Demo Node</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+        <script src="/socket.io/socket.io.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <br>
+            <div class="jumbotron">
+                <h1 class="display-4">Send Message</h1>
+                <br>
+                <input id='name' class="form-controll" placeholder="Name">
+                <br><br>
+                <textarea id='message' class="form-controll" placeholder="Message"></textarea>
+                <br>
+                <button id='send' class="btn btn-success">Send</button>
+            </div>
+            <div id="messages">
+                
+            </div>
+        </div>
+        <script>
+            var socket = io();
+            $(function () {
+            //$(()=> {
+                console.log("loaded");
+                $("#send").click(function() {                    
+                    //addMessages({name:'Bulle', message:'hello'});
+                    var message = { name:$("#name").val(), message:$("#message").val() };
+                    postMessage(message);
+                });
+                getMessages();
+            });
+            
+            socket.on('message', addMessage);
+            //socket.addEventListener('message', addMessage, true);
+            
+            function addMessage(message){
+                console.log("received message:" + message.name);
+                $("#messages").append(`<h4> ${message.name} </h4> <p> ${message.message} </p>`);
+            }
+            function getMessages() {
+                $.get('http://localhost:3000/messages', function(data){
+                    console.log(data);
+                    data.forEach(addMessage);
+//                    data.forEach(function(el) {
+//                        addMessages(el);
+//                    });
+                });
+            }
+            function postMessage(message) {
+                $.post('http://localhost:3000/messages', message);
+//                $.post('http://localhost:3000/messages', message, function(data){
+//                    console.log(data);
+//                    data.forEach(addMessages);
+////                    data.forEach(function(el) {
+////                        addMessages(el);
+////                    });
+//                });
+            }
+        </script>
+    </body>
+</html>
